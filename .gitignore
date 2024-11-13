@@ -1,0 +1,5 @@
+# Ignore specific files
+Parser.java
+Lexer.java
+sym.java
+Lexer.java~

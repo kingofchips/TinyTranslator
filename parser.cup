@@ -1,0 +1,132 @@
+/*
+   Simple +/-/* expression language; 
+   parser evaluates constant expressions on the fly
+*/
+
+package cup.example;
+
+import java_cup.runtime.*;
+import cup.example.Lexer;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+
+parser code {:
+  protected Lexer lexer;
+:}
+
+/* define how to connect to the scanner! */
+init with {:
+  ComplexSymbolFactory f = new ComplexSymbolFactory();
+  symbolFactory = f;
+  File file = new File("input.txt");
+  FileInputStream fis = null;
+  try {
+    fis = new FileInputStream(file);
+  } catch (IOException e) {
+    e.printStackTrace();
+  } 
+  lexer = new Lexer(f,fis);
+:};
+scan with {: return lexer.next_token(); :};
+
+/* Terminals (tokens returned by the scanner). */
+terminal            INT, CHAR;
+terminal            PLUS, MINUS, TIMES, DIVIDE;
+terminal            IF, ELSE, WHILE, RETURN;
+terminal            NEQUAL, EQUAL, GREATER, LESS, NOT, ASSIGN;
+terminal            LPAR, RPAR, LBRACE, RBRACE, LBRACK, RBRACK, SEMICOLON, COMMA;
+terminal            WRITE, READ, LENGTH;
+terminal String     NAME, QCHAR, NUMBER;
+
+/* Non terminals */
+non terminal program, declaration, fun_declaration, var_declaration, type;
+non terminal formal_pars, block, formal_par;
+non terminal statements, statement, lexp, exp, binop, unop, pars, var;
+
+/* Precedences */
+precedence left PLUS, MINUS, TIMES, DIVIDE;
+
+/* The grammar rules */
+program ::= program declaration 
+          | declaration
+          ;
+          
+declaration ::= fun_declaration
+              | var_declaration
+              ;
+             
+fun_declaration ::= type NAME LPAR formal_pars RPAR block
+                  ;
+                       
+formal_pars ::= formal_pars COMMA formal_par
+              | formal_par
+              | 
+              ;
+             
+formal_par ::= type NAME
+             ;
+             
+block ::= LBRACE var_declaration statements RBRACE
+        | LBRACE statements RBRACE
+        ;
+      
+var_declaration ::= type NAME SEMICOLON
+                  ;  
+                  
+type ::= INT
+       | CHAR
+       | type LBRACK exp RBRACK
+       ;                                                              
+       
+statements ::= statements SEMICOLON statement
+             | statement
+             |
+             ;
+             
+statement ::= IF LPAR exp RPAR statement
+            | IF LPAR exp RPAR statement ELSE statement
+            | WHILE LPAR exp RPAR statement
+            | lexp ASSIGN exp
+            | RETURN exp
+            | NAME LPAR pars RPAR
+            | block
+            | WRITE exp
+            | READ exp
+            ;
+            
+lexp ::= var
+       | lexp LBRACK exp RBRACK
+       ;
+       
+exp ::= lexp
+      | exp binop exp
+      | unop exp
+      | LPAR exp RPAR
+      | NUMBER
+      | NAME LPAR pars RPAR
+      | QCHAR
+      | LENGTH lexp
+      ;
+      
+binop ::= MINUS
+        | PLUS
+        | TIMES
+        | DIVIDE
+        | EQUAL
+        | NEQUAL
+        | GREATER
+        | LESS
+        ;
+        
+unop ::= MINUS
+       | NOT
+       ;
+       
+pars ::= pars COMMA exp
+       | exp
+       |
+       ;                                                    
+          
+var ::= NAME
+      ;
