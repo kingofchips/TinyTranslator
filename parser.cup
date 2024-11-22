@@ -41,92 +41,93 @@ terminal String     NAME, QCHAR, NUMBER;
 
 /* Non terminals */
 non terminal program, declaration, fun_declaration, var_declaration, type;
-non terminal formal_pars, block, formal_par;
+non terminal formal_pars, block, formal_par, var_declaration_list;
 non terminal statements, statement, lexp, exp, binop, unop, pars, var;
 
 /* Precedences */
 precedence left PLUS, MINUS, TIMES, DIVIDE;
 
 /* The grammar rules */
-program ::= program declaration 
-          | declaration
+program ::= program declaration {: System.out.println("Adding a declaration to the program"); :}
+          | declaration         {: System.out.println("Processing a single declaration in the program"); :}
           ;
           
-declaration ::= fun_declaration
-              | var_declaration
+declaration ::= fun_declaration {: System.out.println("Processing a function declaration"); :}
+              | var_declaration {: System.out.println("Processing a variable declaration"); :}
               ;
              
-fun_declaration ::= type NAME LPAR formal_pars RPAR block
+fun_declaration ::= type NAME LPAR formal_pars RPAR block {: System.out.println("Function declared"); :}
                   ;
                        
-formal_pars ::= formal_pars COMMA formal_par
-              | formal_par
-              | 
+formal_pars ::= formal_pars COMMA formal_par {: System.out.println("Adding a formal parameter to the list"); :}
+              | formal_par                   {: System.out.println("Single formal parameter defined"); :}
+              |
               ;
              
-formal_par ::= type NAME
+formal_par ::= type NAME {: System.out.println("Formal parameter"); :}
              ;
              
-block ::= LBRACE var_declaration statements RBRACE
-        | LBRACE statements RBRACE
+block ::= LBRACE var_declaration_list statements RBRACE {: System.out.println("Processing a block of code"); :}
         ;
+        
+var_declaration_list ::= var_declaration_list var_declaration {: System.out.println("Adding a variable declaration to the list"); :}
+                       |
+                       ;
       
-var_declaration ::= type NAME SEMICOLON
+var_declaration ::= type NAME SEMICOLON {: System.out.println("Variable declared"); :}
                   ;  
                   
-type ::= INT
-       | CHAR
-       | type LBRACK exp RBRACK
+type ::= INT                    {: System.out.println("Type: Integer"); :}
+       | CHAR                   {: System.out.println("Type: Character"); :}
+       | type LBRACK exp RBRACK {: System.out.println("Array type declaration"); :}
        ;                                                              
        
-statements ::= statements SEMICOLON statement
-             | statement
+statements ::= statements SEMICOLON statement {: System.out.println("Adding a statement to the list"); :}
              |
              ;
              
-statement ::= IF LPAR exp RPAR statement
-            | IF LPAR exp RPAR statement ELSE statement
-            | WHILE LPAR exp RPAR statement
-            | lexp ASSIGN exp
-            | RETURN exp
-            | NAME LPAR pars RPAR
-            | block
-            | WRITE exp
-            | READ exp
+statement ::= IF LPAR exp RPAR statement                {: System.out.println("Processing an IF statement"); :}
+            | IF LPAR exp RPAR statement ELSE statement {: System.out.println("Processing an IF-ELSE statement"); :}
+            | WHILE LPAR exp RPAR statement             {: System.out.println("Processing a WHILE loop"); :}
+            | lexp ASSIGN exp                           {: System.out.println("Assignment"); :}
+            | RETURN exp                                {: System.out.println("Return statement"); :}
+            | NAME LPAR pars RPAR                       {: System.out.println("Function call"); :}
+            | block                                     {: System.out.println("Block as a statement"); :}
+            | WRITE exp                                 {: System.out.println("Write statement"); :}
+            | READ exp                                  {: System.out.println("Read statement"); :}
             ;
             
-lexp ::= var
-       | lexp LBRACK exp RBRACK
+lexp ::= var                    {: System.out.println("Left-hand side expression"); :}
+       | lexp LBRACK exp RBRACK {: System.out.println("Array access"); :}
        ;
        
-exp ::= lexp
-      | exp binop exp
-      | unop exp
-      | LPAR exp RPAR
-      | NUMBER
-      | NAME LPAR pars RPAR
-      | QCHAR
-      | LENGTH lexp
+exp ::= lexp                {: System.out.println("Expression is a variable"); :}
+      | exp binop exp       {: System.out.println("Binary operation"); :}
+      | unop exp            {: System.out.println("Unary operation"); :}
+      | LPAR exp RPAR       {: System.out.println("Parenthesized expression"); :}
+      | NUMBER              {: System.out.println("Numeric constant"); :}
+      | NAME LPAR pars RPAR {: System.out.println("Function call expression"); :}
+      | QCHAR               {: System.out.println("Character constant"); :}
+      | LENGTH lexp         {: System.out.println("Length of expression"); :}
       ;
       
-binop ::= MINUS
-        | PLUS
-        | TIMES
-        | DIVIDE
-        | EQUAL
-        | NEQUAL
-        | GREATER
-        | LESS
+binop ::= MINUS   {: System.out.println("Binary operator: MINUS"); :}
+        | PLUS    {: System.out.println("Binary operator: PLUS"); :}
+        | TIMES   {: System.out.println("Binary operator: TIMES"); :}
+        | DIVIDE  {: System.out.println("Binary operator: DIVIDE"); :}
+        | EQUAL   {: System.out.println("Binary operator: EQUAL"); :}
+        | NEQUAL  {: System.out.println("Binary operator: NOT EQUAL"); :}
+        | GREATER {: System.out.println("Binary operator: GREATER"); :}
+        | LESS    {: System.out.println("Binary operator: LESS"); :}
         ;
         
-unop ::= MINUS
-       | NOT
+unop ::= MINUS {: System.out.println("Unary operator: MINUS"); :}
+       | NOT   {: System.out.println("Unary operator: NOT"); :}
        ;
        
-pars ::= pars COMMA exp
-       | exp
+pars ::= pars COMMA exp {: System.out.println("Adding an expression to parameters list"); :}
        |
        ;                                                    
           
-var ::= NAME
+var ::= NAME {: System.out.println("Name of variable"); :}
       ;

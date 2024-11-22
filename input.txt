@@ -1,13 +1,5 @@
-// comentariu
-
-23+35; 
-
-'%'
-
-char cartofi;
-int number = 10;
-
-number + 5;
-number * 10;
-number - 8;
-number / 2;
+int tiny ()
+{
+ int a;
+ int b;
+}
