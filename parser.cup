@@ -59,7 +59,7 @@ declaration ::= fun_declaration {: System.out.println("Processing a function dec
 fun_declaration ::= type NAME LPAR formal_pars RPAR block {: System.out.println("Function declared"); :}
                   ;
                        
-formal_pars ::= formal_pars COMMA formal_par {: System.out.println("Adding a formal parameter to the list"); :}
+formal_pars ::= formal_par COMMA formal_pars {: System.out.println("Adding a formal parameter to the list"); :}
               | formal_par                   {: System.out.println("Single formal parameter defined"); :}
               |
               ;
@@ -82,7 +82,7 @@ type ::= INT                    {: System.out.println("Type: Integer"); :}
        | type LBRACK exp RBRACK {: System.out.println("Array type declaration"); :}
        ;                                                              
        
-statements ::= statements SEMICOLON statement {: System.out.println("Adding a statement to the list"); :}
+statements ::= statement SEMICOLON statements {: System.out.println("Adding a statement to the list"); :}
              |
              ;
              
@@ -125,7 +125,8 @@ unop ::= MINUS {: System.out.println("Unary operator: MINUS"); :}
        | NOT   {: System.out.println("Unary operator: NOT"); :}
        ;
        
-pars ::= pars COMMA exp {: System.out.println("Adding an expression to parameters list"); :}
+pars ::= exp COMMA pars {: System.out.println("Adding an expression to parameters list"); :}
+       | exp            {: System.out.println("Single expression defined"); :}
        |
        ;                                                    
           

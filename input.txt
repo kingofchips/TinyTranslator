@@ -1,5 +1,15 @@
-int tiny ()
-{
+int suma (int c, int d){
+    return c + d;
+}    
+
+int tiny (){
+// comentariu
+ 
  int a;
- int b;
+ char b;
+ int sum;
+ a = 10;
+ b = 15;
+ sum = suma(a, b);
+ return sum;
 }
